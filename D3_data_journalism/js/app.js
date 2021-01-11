@@ -7,44 +7,53 @@ var width = svgWidth - margin.left - margin.right;
 var height = svgHeight - margin.top - margin.bottom;
 
 // Create an SVG wrapper
-var svg = d3
-  .select(".chart")
+var svg = d3.select(".chart")
   .append("svg")
   .attr("width", svgWidth)
-  .attr("height", svgHeight)
-  .append("g")
-  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  .attr("height", svgHeight);
 
 // Append an SVG group
-var chart = svg.append("g");
-
-// Append a div
-d3.select(".chart").append("div").attr("class", "tooltip").style("opacity", 0);
+var chart = svg.append("g")
+  .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 // Retrieve data from the CSV file and execute everything below
-d3.csv("D3_data_journalism/data/data.csv", function(demoData) {
-    // if (err) throw err; (err, demoData)
-  
-    demoData.forEach(function(d) {
-      d.income = +d.income;
-      d.healthcare= +d.healthcare;
-      d.obesity = +d.obesity;
+d3.csv("D3_data_journalism/data/data.csv").then(function(demoData) {
+
+  // Step 1: Parse Data/Cast as numbers
+  // ==============================
+  demoData.forEach(function(data) {
+    data.obesity = +data.obesity;
+    data.income = +data.income;
+    data.healthcare = +data.healthcare;
+
     });
-  
+
     console.log(demoData);
 
+// Create scales
+var xLinearScale = d3.scaleLinear()
+  .domain([20, d3.max(demoData, d => d.healthcare)])
+  .range([0, width]);
 
-  // Create scales
-  var yLinearScale = d3.scaleLinear().range([height, 0]);
-  var xLinearScale = d3.scaleLinear().range([0, width]);
+var yLinearScale = d3.scaleLinear()
+  .domain([0, d3.max(demoData, d => d.obesity)])
+  .range([height, 0]);
+  
+// Create Axis
+var bottomAxis = d3.axisBottom(xLinearScale);
+var leftAxis = d3.axisLeft(yLinearScale);
+  
+// amend axis(s) to chart
+chart.append("g")
+.attr("transform", `translate(0, ${height})`)
+.call(bottomAxis);
 
-  // // Create axiss
-  // var bottomAxis = d3.axisBottom(xLinearScale);
-  // var leftAxis = d3.axisLeft(yLinearScale);
+chart.append("g")
+.call(leftAxis);
 
-  // // Variables store minimum and maximum values in a column in data.csv
-  // var xMin;
-  // var xMax;
-  // var yMax;
+
+
+
+
 
   });
