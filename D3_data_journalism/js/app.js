@@ -20,3 +20,17 @@ var chart = svg.append("g");
 
 // Append a div
 d3.select(".chart").append("div").attr("class", "tooltip").style("opacity", 0);
+
+// Retrieve data from the CSV file and execute everything below
+d3.csv("D3_data_journalism/data/data.csv", function(err, myData) {
+    if (err) throw err;
+  
+    myData.forEach(function(data) {
+      data.obese = Number(data.obese);
+      data.bachelorOrHigher = Number(data.bachelorOrHigher);
+      data.currentSmoker = Number(data.currentSmoker);
+    });
+  
+    console.log(myData);
+
+  });
