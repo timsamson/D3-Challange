@@ -51,6 +51,27 @@ chart.append("g")
 chart.append("g")
 .call(leftAxis);
 
+//Create Circles Draft
+var circlesGroup = chart.selectAll("circle")
+.data(demoData)
+.enter()
+.append("circle")
+.attr("cx", d => xLinearScale(d.obesity))
+.attr("cy", d => yLinearScale(d.healthcare))
+.attr("r", "15")
+.attr("fill", "pink")
+.attr("opacity", ".5");
+
+//Init tool tip
+var toolTip = d3.tip()
+.attr("class", "tooltip")
+.offset([80, -60])
+.html(function(d) {
+  return (`${d.income }`);
+});
+
+// create chart
+chart.call(toolTip);
 
 
 
