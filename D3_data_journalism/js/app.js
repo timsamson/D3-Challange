@@ -13,84 +13,94 @@ var svg = d3.select(".scatter")
   .attr("height", svgHeight);
 
 // Append an SVG group
-var chart = svg.append("g")
+var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-  // Initial Params
-var chosenXAxis = "healthcare";
+// Retrieve data from the CSV file and execute everything below
+d3.csv("D3_data_journalism/data/data.csv").then(function(demoData, err) {
+  if (err) throw err;
 
-//Data
-var demoData = await d3.csv("D3_data_journalism/data/data.csv");
-
-// Parse Data/Cast as numbers
+  //Parse Data
   demoData.forEach(function(data) {
+    data.income = +data.income;
+    data.obesity = +data.obesity;
     data.healthcare = +data.healthcare;
-    data.obesity    = +data.obesity;
-    data.income     = +data.income;
-  });
+    });
+  
+  console.log(demoData);
 
-//  scale functions
-var xLinearScale = xScale(demoData, chosenXAxis);
-var yLinearScale = yScale(demoData, chosenYAxis);
+//scale functions
+  var xLinearScale = d3.scaleLinear()
+    .domain([0, d3.max(demoData, d => d.obesity)])
+    .range([0, width]);
 
-// Init axis functions
-var bottomAxis = d3.axisBottom(xLinearScale);
-var leftAxis = d3.axisLeft(yLinearScale);
+  var yLinearScale = d3.scaleLinear()
+    .domain([0, d3.max(demoData, d => d.healthcare)])
+    .range([height, 0]);
 
-// Append x and y axes to the chart
-var xAxis = chartGroup.append("g")
-  .attr("transform", `translate(0, ${height})`)
-  .call(bottomAxis);
+  // Axis
+  var bottomAxis = d3.axisBottom(xLinearScale);
+  var leftAxis = d3.axisLeft(yLinearScale);
 
-var yAxis = chartGroup.append("g")
-  .call(leftAxis);
+  // Append Axes to the chart
+  chartGroup.append("g")
+    .attr("transform", `translate(0, ${height})`)
+    .call(bottomAxis);
 
-// Create circles
-var circlesGroup = chartGroup.selectAll("g circle")
-  .data(stateData)
-  .enter()
-  .append("g");
+  chartGroup.append("g")
+    .call(leftAxis);
 
-var circlesXY = circlesGroup.append("circle")
-  .attr("cx", d => xLinearScale(d[chosenXAxis]))
-  .attr("cy", d => yLinearScale(d[chosenYAxis]))
-  .attr("r", 15)
-  .classed("demoCircle", true);
+  // Create Circles
+  var circlesGroup = chartGroup.selectAll("circle")
+    .data(demoData)
+    .enter()
+    .append("circle")
+    .attr("cx", d => xLinearScale(d.obesity))
+    .attr("cy", d => yLinearScale(d.healthcare))
+    .attr("r", "12")
+    .attr("fill", "blue")
+    .attr("opacity", ".5");  
 
-var circlesText = circlesGroup.append("text")
-  .text(d => d.abbr)
-  .attr("dx", d => xLinearScale(d[chosenXAxis]))
-  .attr("dy", d => yLinearScale(d[chosenYAxis]) + 5)
-  .classed("demoText", true);
+  // Tool Tip
+  var toolTip = d3.tip()
+  .attr("class", "tooltip")
+  .offset([80, -60])
+  .html(function(d) {
+    return (abbr + '%');
+    });
 
-// X labels
-var xlabelsGroup = chartGroup.append("g")
-  .attr("transform", `translate(${width / 2}, ${height})`);
+  // append tool tip
+  chartGroup.call(toolTip);
 
-var incomeLabel = xlabelsGroup.append("text")
-  .attr("x", 0)
-  .attr("y", 80)
-  .attr("value", "income") 
-  .text("Household Income (Median)")
-  .classed("inactive", true);
+  // event listeners
+  circlesGroup.on("click", function (data) {
+    toolTip.show(data, this);
+  })
+    // onmouseout event
+    .on("mouseout", function (data, index) {
+      toolTip.hide(data);
+    });
 
-// Y labels
-var ylabelsGroup = chartGroup.append("g");
-
-var healthcareLabel = ylabelsGroup.append("text")
+  // Create axes labels
+  chartGroup.append("text")
     .attr("transform", "rotate(-90)")
-    .attr("x", -(height / 2))
-    .attr("y", -40)
-    .attr("value", "healthcare") 
-    .text("Lacks Healthcare (%)")
-    .classed("active", true);
+    .attr("y", 0 - margin.left + 40)
+    .attr("x", 0 - (height / 2))
+    .attr("dy", "1em")
+    .attr("class", "axisText")
+    .style("fill", "black")
+    .style("font", "20px sans-serif")
+    .style("font-weight", "bold")
+    .text("People without Healthcare (%)");
 
-var obeseLabel = ylabelsGroup.append("text")
-    .attr("transform", "rotate(-90)")
-    .attr("x", -(height / 2))
-    .attr("y", -80)
-    .attr("value", "obesity") 
-    .text("Obese (%)")
-    .classed("inactive", true);
+  chartGroup.append("text")
+    .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
+    .attr("class", "axisText")
+    .style("font", "20px sans-serif")
+    .style("font-weight", "bold")
+    .text(")Obesity (%)");
 
-//Tool Tips
+  }).catch(function (error) {
+  console.log(error);
+});
+
