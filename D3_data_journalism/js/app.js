@@ -22,15 +22,29 @@ var chart = svg.append("g");
 d3.select(".chart").append("div").attr("class", "tooltip").style("opacity", 0);
 
 // Retrieve data from the CSV file and execute everything below
-d3.csv("D3_data_journalism/data/data.csv", function(err, myData) {
-    if (err) throw err;
+d3.csv("D3_data_journalism/data/data.csv", function(demoData) {
+    // if (err) throw err; (err, demoData)
   
-    myData.forEach(function(data) {
-      data.obese = Number(data.obese);
-      data.bachelorOrHigher = Number(data.bachelorOrHigher);
-      data.currentSmoker = Number(data.currentSmoker);
+    demoData.forEach(function(d) {
+      d.income = +d.income;
+      d.healthcare= +d.healthcare;
+      d.obesity = +d.obesity;
     });
   
-    console.log(myData);
+    console.log(demoData);
+
+
+  // Create scales
+  var yLinearScale = d3.scaleLinear().range([height, 0]);
+  var xLinearScale = d3.scaleLinear().range([0, width]);
+
+  // // Create axiss
+  // var bottomAxis = d3.axisBottom(xLinearScale);
+  // var leftAxis = d3.axisLeft(yLinearScale);
+
+  // // Variables store minimum and maximum values in a column in data.csv
+  // var xMin;
+  // var xMax;
+  // var yMax;
 
   });
