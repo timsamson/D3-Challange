@@ -97,14 +97,36 @@ let leftAxis = d3.axisLeft(yLinearScale);
     .text("Household Income (Median)")
     .classed("inactive", true);
 
+// Y labels
+  var ylabelsGroup = chartGroup.append("g");
 
+  var healthcareLabel = ylabelsGroup.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("x", -(height / 2))
+    .attr("y", -40)
+    .attr("value", "healthcare")
+    .text("Lacks Healthcare (%)")
+    .classed("active", true);
 
+  var smokesLabel = ylabelsGroup.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("x", -(height / 2))
+    .attr("y", -60)
+    .attr("value", "smokes")
+    .text("Obese (%)")
+    .classed("inactive", true);
+    
+  var obeseLabel = ylabelsGroup.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("x", -(height / 2))
+    .attr("y", -80)
+    .attr("value", "obesity")
+    .text("Obese (%)")
+    .classed("inactive", true);
 
+  // Tool Tips 
+  var circlesGroup = updateToolTip(circlesGroup, chosenXAxis, chosenYAxis);
 
-
-
-
-  // Tool Tip
   var toolTip = d3.tip()
     .attr("class", "tooltip")
     .offset([80, -60])
