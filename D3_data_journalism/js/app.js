@@ -36,19 +36,15 @@ d3.csv("D3_data_journalism/data/data.csv").then(function(demoData, err) {
   
   console.log(demoData);
 
-//scale functions
-  var xLinearScale = d3.scaleLinear()
-    .domain([0, d3.max(demoData, d => d.obesity)])
-    .range([0, width]);
+//Init scale
+var xLinearScale = xScale(demoData, chosenXAxis);
+var yLinearScale = yScale(demoData, chosenYAxis);
 
-  var yLinearScale = d3.scaleLinear()
-    .domain([0, d3.max(demoData, d => d.healthcare)])
-    .range([height, 0]);
+// Initialize axis 
+let bottomAxis = d3.axisBottom(xLinearScale);
+let leftAxis = d3.axisLeft(yLinearScale);
 
-  // Axis
-  var bottomAxis = d3.axisBottom(xLinearScale);
-  var leftAxis = d3.axisLeft(yLinearScale);
-
+  ///111111111
   // Append Axes to the chart
   chartGroup.append("g")
     .attr("transform", `translate(0, ${height})`)
@@ -58,15 +54,55 @@ d3.csv("D3_data_journalism/data/data.csv").then(function(demoData, err) {
     .call(leftAxis);
 
   // Create Circles
-  var circlesGroup = chartGroup.selectAll("circle")
+  var circlesGroup = chartGroup.selectAll("g circle")
     .data(demoData)
     .enter()
+    .append("g");
+
+  var circlesPost = circlesGroup
     .append("circle")
-    .attr("cx", d => xLinearScale(d.obesity))
-    .attr("cy", d => yLinearScale(d.healthcare))
-    .attr("r", "12")
-    .attr("fill", "blue")
-    .attr("opacity", ".5");  
+    .attr("cx", d => xLinearScale(d[chosenXAxis]))
+    .attr("cy", d => yLinearScale(d[chosenYAxis]))
+    .attr("r", 15)
+    .attr("stateCircle", true);
+
+  var circlesText = circlesGroup
+    .append("text")
+    .attr("dx", d => xLinearScale(d[chosenXAxis]))
+    .attr("dy", d => yLinearScale(d[chosenYAxis]))
+    .classed("stateText", true);
+
+//Axis labels
+  var xlabelsGroup = chartGroup.append("g")
+    .attr("transform", `translate(${width / 2}, ${height})`);
+
+  var povertyLabel = xlabelsGroup.append("text")
+    .attr("x", 0)
+    .attr("y", 40)
+    .attr("value", "poverty") 
+    .text("In Poverty (%)")
+    .classed("active", true);
+
+  var ageLabel = xlabelsGroup.append("text")
+    .attr("x", 0)
+    .attr("y", 60)
+    .attr("value", "age") 
+    .text("Age (Median)")
+    .classed("inactive", true);
+
+  var incomeLabel = xlabelsGroup.append("text")
+    .attr("x", 0)
+    .attr("y", 80)
+    .attr("value", "income") 
+    .text("Household Income (Median)")
+    .classed("inactive", true);
+
+
+
+
+
+
+
 
   // Tool Tip
   var toolTip = d3.tip()
