@@ -24,22 +24,18 @@ var chosenYAxis = "healthcare";
 
   // Function for Updating xScale Upon Click on Axis Label
   function xScale(demoData, chosenXAxis) {
-    // Create Scale Functions for the Chart (chosenXAxis)
     var xLinearScale = d3.scaleLinear()
-      .domain([d3.min(demoData, d => d[chosenXAxis]) * 0.8,
-        d3.max(demoData, d => d[chosenXAxis]) * 1.1
-      ])
+      .domain([d3.min(demoData, d => d[chosenXAxis]) * 0.9,
+        d3.max(demoData, d => d[chosenXAxis])* 1.1])
       .range([0, width]);
     return xLinearScale;
   }
 
   // Function for Updating yScale Upon Click on Axis Label
   function yScale(demoData, chosenYAxis) {
-    // Create Scale Functions for the Chart (chosenYAxis)
     var yLinearScale = d3.scaleLinear()
       .domain([d3.min(demoData, d => d[chosenYAxis]) -1,
-        d3.max(demoData, d => d[chosenYAxis]) +1
-      ])
+        d3.max(demoData, d => d[chosenYAxis]) +1])
       .range([height, 0]);
     return yLinearScale;
   }
@@ -77,10 +73,9 @@ var chosenYAxis = "healthcare";
 
     textGroup.transition()
       .duration(1000)
-      .attr("x", d => newXScale(d[chosenXAxis]))
-      .attr("y", d => newYScale(d[chosenYAxis]))
+      .attr("dx", d => newXScale(d[chosenXAxis]))
+      .attr("dy", d => newYScale(d[chosenYAxis]))
       .attr("text-anchor", "middle");
-
     return textGroup;
   }
 
@@ -106,8 +101,8 @@ var chosenYAxis = "healthcare";
       var yLabel = "Smokes (%)";
     }
   
-  // Initialize Tool Tip
-  var toolTip = d3
+// Initialize Tool Tip
+toolTip = d3
     .tip()
     .attr("class", "tooltip d3-tip")
     .offset([90, 90])
@@ -152,9 +147,9 @@ var yLinearScale = yScale(demoData, chosenYAxis);
 var bottomAxis = d3.axisBottom(xLinearScale);
 var leftAxis = d3.axisLeft(yLinearScale);
 
-  ///111111111
+
   // Append Axes to the chart
-  var xAxis = chartGroup.append("g")
+var xAxis = chartGroup.append("g")
   .classed("x-axis", true)
   .attr("transform", `translate(0, ${height})`)
   .call(bottomAxis);
@@ -165,7 +160,7 @@ var yAxis = chartGroup.append("g")
   .call(leftAxis);
 
   // Create Circles
-  var circlesGroup = chartGroup.selectAll(".stateCircle")
+  var circlesXY = chartGroup.selectAll(".stateCircle")
     .data(demoData)
     .enter()
     .append("circle")
@@ -179,8 +174,8 @@ var yAxis = chartGroup.append("g")
     .data(demoData)
     .enter()
     .append("text")
-    .attr("x", d => xLinearScale(d[chosenXAxis]))
-    .attr("y", d => yLinearScale(d[chosenYAxis]*.98))
+    .attr("dx", d => xLinearScale(d[chosenXAxis]))
+    .attr("dy", d => yLinearScale(d[chosenYAxis]*.98))
     .text(d => (d.abbr))
     .attr("class", "stateText")
     .attr("font-size", "12px")
@@ -233,7 +228,7 @@ var yAxis = chartGroup.append("g")
     .attr("value", "smokes")
     .classed("axis-text", true)
     .attr("dy", "1em")
-    .text("Obese (%)")
+    .text("Smoker (%)")
     .classed("inactive", true);
     
   var obesityLabel = ylabelsGroup.append("text")
@@ -261,9 +256,9 @@ var yAxis = chartGroup.append("g")
       //Pull values for selection
       xLinearScale = xScale(demoData, chosenXAxis);
       xAxis = renderXAxes(xLinearScale, xAxis);
-      circlesXY = renderCircles(circlesGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
+      circlesXY = renderCircles(circlesXY, yLinearScale, chosenYAxis, xLinearScale, chosenXAxis);
       circlesText = renderText(textGroup, xLinearScale, chosenXAxis, yLinearScale, chosenYAxis);
-      circlesGroup = updateToolTip(circlesXY, chosenXAxis, chosenYAxis, textGroup);
+      circlesGroup = updateToolTip(circlesGroup, chosenXAxis, chosenYAxis, textGroup);
 
       if (chosenXAxis === "poverty") {
         povertyLabel
@@ -311,9 +306,9 @@ var yAxis = chartGroup.append("g")
       chosenYAxis = value;
       yLinearScale = yScale(demoData, chosenYAxis);
       yAxis = renderYAxes(yLinearScale, yAxis);
-      circlesXY = renderCircles(circlesGroup, yLinearScale, chosenYAxis, xLinearScale, chosenXAxis);
+      circlesXY = renderCircles(circlesXY, yLinearScale, chosenYAxis, xLinearScale, chosenXAxis);
       circlesText = renderText(textGroup, yLinearScale, chosenYAxis, xLinearScale, chosenXAxis);
-      circlesGroup = updateToolTip(circlesXY, chosenXAxis, chosenYAxis, textGroup);
+      circlesGroup = updateToolTip(circlesGroup, chosenXAxis, chosenYAxis, textGroup);
       if (chosenYAxis === "healthcare") {
         healthcareLabel
           .classed("active", true)
@@ -347,17 +342,6 @@ var yAxis = chartGroup.append("g")
           .classed("active", true)
           .classed("inactive", false);
       }
-      
-      circlesGroup.call(toolTip);
-
-      // Create Event Listeners to Display and Hide the Circles Tooltip
-      circlesGroup.on("mouseover", function(data) {
-        toolTip.show(data, this);
-      })
-        // onmouseout Event
-        .on("mouseout", function(data) {
-          toolTip.hide(data);
-        });
       }
     }
   );
