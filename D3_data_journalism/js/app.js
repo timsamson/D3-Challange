@@ -16,15 +16,22 @@ var svg = d3.select("#scatter")
 var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
+// Initial Params
+var chosenXAxis = "poverty";
+var chosenYAxis = "healthcare";
+
 // Retrieve data from the CSV file and execute everything below
 d3.csv("D3_data_journalism/data/data.csv").then(function(demoData, err) {
   if (err) throw err;
 
   //Parse Data
   demoData.forEach(function(data) {
-    data.income = +data.income;
-    data.obesity = +data.obesity;
+    data.poverty    = +data.poverty;
     data.healthcare = +data.healthcare;
+    data.age        = +data.age;
+    data.smokes     = +data.smokes;
+    data.obesity    = +data.obesity;
+    data.income     = +data.income;
     });
   
   console.log(demoData);
@@ -63,11 +70,10 @@ d3.csv("D3_data_journalism/data/data.csv").then(function(demoData, err) {
 
   // Tool Tip
   var toolTip = d3.tip()
-  .attr("class", "tooltip")
-  .offset([80, -60])
-  .html(function(d) {
-    return (abbr + '%');
-    });
+    .attr("class", "tooltip")
+    .offset([80, -60])
+    .text(function(data) {
+       return data.abbr;})
 
   // append tool tip
   chartGroup.call(toolTip);
