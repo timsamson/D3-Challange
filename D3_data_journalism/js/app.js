@@ -231,15 +231,66 @@ var obesityLabel = ylabelsGroup.append("text")
        }
      }
    );
-   
+   console.log(chosenXAxis);
+   console.log(chosenYAxis);
 
-   var analysis = [];
+// function updateArticle (chosenXAxis, chosenYAxis){
 
-   d3.select('#article_text')
-     .selectAll('div')
-     .data(analysis)
-     .enter()
-     .append('div')
-     .text(analysis);
-     
+  if (chosenXAxis === "poverty") {
+    if (chosenYAxis === "healthcare") {
+      articleHeader = "Does Poverty affect access to healthcare?"
+      articleText = "1"
+    }
+    else if(chosenYAxis === "smoker") {
+      articleHeader = "Are poorer people more likely to smoke?"
+      articleText = "2"
+    }
+    else {
+      articleHeader = "Obesity rates compared to Peverty"
+      articleText = "3"
+    }
+  }
+  else if (chosenXAxis === "age"){
+    if (chosenYAxis=== "healthcare") {
+      articleHeader = "Age and Healthcare"
+      articleText = "4"
+    }
+    else if(chosenYAxis === "smoker") {
+      articleHeader = "Age and Smoking"
+      articleText = "5"
+    }
+    else {
+      articleHeader = "Age and Obesity"
+      articleText = "6"
+    }
+  }
+  else {
+    if (chosenYAxis === "healthcare") {
+      articleHeader = "Does income affect helthcare?"
+      articleText = "7"
+    }
+    else if(chosenYAxis === "smoker") {
+      articleHeader = "How does income relate to smoking?"
+      articleText = "8"
+    }
+    else {
+      articleHeader = "Rich, Fat, Bastards is it really a thing?";
+      articleText = "9";
+    }
+  }
+  
+   d3.select("#article_text")
+      .classed("article_text", true)
+      .text(articleText);
+
+   d3.select("#article_header")
+      .classed("article_header", true)
+      .html(`<h3> ${articleHeader} </h3>`);
+
+   console.log(articleText);
+   console.log(articleHeader);
+// }
+
+// updateArticle.call
+
 });

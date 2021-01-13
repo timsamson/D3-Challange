@@ -66,7 +66,7 @@ function yScale(demoData, chosenYAxis) {
     return circlesGroup;
   }
 
-  // format number to USD currency
+  // format currency
 var formatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
@@ -126,3 +126,6 @@ function updateToolTip(circlesGroup, chosenXAxis, chosenYAxis) {
 
 return circlesGroup;
 }
+
+
+
