@@ -66,103 +66,118 @@ function yScale(demoData, chosenYAxis) {
     return circlesGroup;
   }
 
-  // Function for Updating Circles Group with New Tooltip
-  function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
-    var xLabel = ""
-    var yLabel = ""
+  // format number to USD currency
+var formatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+});
 
-    if (chosenXAxis === "poverty") {
-      var xLabel = "Poverty (%)";
-    }
-    else if (chosenXAxis === "age") {
-      var xLabel = "Age (Median)";
-    }
-    else {
-      var xLabel = "Household Income (Median)";
-    }
-    if (chosenYAxis === "healthcare") {
-      var yLabel = "Lacks Healthcare (%)";
-    }
-    else if (chosenYAxis === "obesity") {
-      var yLabel = "Obese (%)";
-    }
-    else {
-      var yLabel = "Smokes (%)";
-    }
-  
-  // Initialize Tool Tip
-    toolTip = d3.tip()
-        .attr("class", "d3-tip")
-        .offset([50, -75])
-        .html(function(d) {
-          return (`<strong>${d.abbr}</strong><br>${xLabel} ${d[chosenXAxis]}<br>${yLabel} ${d[chosenYAxis]}`);
-        });
+// function used for updating circles group with new tooltip
+function updateToolTip(circlesGroup, chosenXAxis, chosenYAxis) {
 
-    circlesGroup.call(toolTip);
+  var xpercentsign = "";
+  var xlabel = "";
+  if (chosenXAxis === "poverty") {
+    xlabel = "Poverty";
+    xpercentsign = "%";
+  } else if (chosenXAxis === "age"){
+    xlabel = "Age";
+  } else {
+    xlabel = "Income";
+  }
 
-    // Event Listeners
-    circlesGroup.on("mouseover", function(data) {
+  var ypercentsign = "";
+  var ylabel = "";
+  if (chosenYAxis === "healthcare") {
+    ylabel = "Healthcare";
+    ypercentsign = "%";
+  } else if (chosenYAxis === "smokes"){
+    ylabel = "Smokes";
+    ypercentsign = "%";
+  } else {
+    ylabel = "Obesity";
+    ypercentsign = "%";
+  }
+
+  var toolTip = d3.tip()
+    .attr("class", "d3-tip")
+    .offset([50, -75])
+    .html(function(d) {
+      if (chosenXAxis === "income"){
+        let incomelevel = formatter.format(d[chosenXAxis]);
+
+        return (`${d.state}<br>${xlabel}: ${incomelevel.substring(0, incomelevel.length-3)}${xpercentsign}<br>${ylabel}: ${d[chosenYAxis]}${ypercentsign}`)
+      } else {
+        return (`${d.state}<br>${xlabel}: ${d[chosenXAxis]}${xpercentsign}<br>${ylabel}: ${d[chosenYAxis]}${ypercentsign}`)
+      };
+    });
+
+  circlesGroup.call(toolTip);
+
+  // mouseover event
+  circlesGroup.on("mouseover", function(data) {
       toolTip.show(data, this);
-    })
-      // onmouseout Event
-      .on("mouseout", function(data) {
-        toolTip.hide(data);
-      });
-    return circlesGroup;
-    }
 
-    
-// function analysis(chosenXAxis, chosenYAxis) {
+  })
+    // onmouseout event
+    .on("mouseout", function(data) {
+        toolTip.hide(data, this);
+    });
 
-  function writeArticle(chosenXAxis, chosenYAxis) {
-    var articleText = parent.document.getElementById('article_text');
+return circlesGroup;
+}
   
-    var responses = ["<h3>Poverty V. Obese</h3><br> insert text here",
-                    "<h3>poverty V. Smokes</h3>",
-                    "poverty V. Healthcare",
-                    "Age V. Obese",
-                    "Age V. Smokes",
-                    "Age V. Healthcare",
-                    "Income V. Obese",
-                    "Income V. Smokes",
-                    "Income V. Healthcare",];
+// // function analysis(chosenXAxis, chosenYAxis) {
+
+//   function writeArticle(chosenXAxis, chosenYAxis) {
+//     var articleText = "test value";
+
+//     var articleText = d3.select("#article")
+//                         .append("div");
   
-    var answer = "";
+//     var responses = ["<h3>Poverty V. Obese</h3><br> insert text here",
+//                     "<h3>poverty V. Smokes</h3>",
+//                     "poverty V. Healthcare",
+//                     "Age V. Obese",
+//                     "Age V. Smokes",
+//                     "Age V. Healthcare",
+//                     "Income V. Obese",
+//                     "Income V. Smokes",
+//                     "Income V. Healthcare",];
 
-    if (chosenXAxis === "poverty") {
-      if (chosenYAxis === "obese") {
-        answer = responses[0];
-      }
-      else if (chosenYAxis === "Smoker"){
-        answer = responses[1];
-      }
-      else {
-        answer = response[2];
-      }
-    }
-    else if (chosenXAxis === "age") {
-      if (chosenYAxis === "obese") {
-        answer = responses[3];
-      }
-      else if (chosenYAxis === "Smoker"){
-        answer = responses[4];
-      }
-      else {
-        answer = response[5];
-      }
-    }
-    else {
-      if (chosenYAxis === "income") {
-        answer = responses[6];
-      }
-      else if (chosenYAxis === "Smoker"){
-        answer = responses[7];
-      }
-      else {
-        answer = response[8];
-      }
+//     if (chosenXAxis === "poverty") {
+//       if (chosenYAxis === "obese") {
+//         articleText = responses[0];
+//       }
+//       else if (chosenYAxis === "Smoker"){
+//         articleText = responses[1];
+//       }
+//       else {
+//         articleText = response[2];
+//       }
+//     }
+//     else if (chosenXAxis === "age") {
+//       if (chosenYAxis === "obese") {
+//         articleText = responses[3];
+//       }
+//       else if (chosenYAxis === "Smoker"){
+//         articleText = responses[4];
+//       }
+//       else {
+//         articleText = response[5];
+//       }
+//     }
+//     else {
+//       if (chosenYAxis === "income") {
+//         articleText = responses[6];
+//       }
+//       else if (chosenYAxis === "Smoker"){
+//         articleText = responses[7];
+//       }
+//       else {
+//         articleText = response[8];
+//       }
 
-    articleText = answer;
-  };
+//   };
 
-};
+// };

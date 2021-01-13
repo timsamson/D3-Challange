@@ -63,27 +63,16 @@ var chosenYAxis = "healthcare";
     .append("g");
   
   var circlesXY = circlesGroup.append("circle")
-    // .data(demoData)
-    // .enter()
-    // .append("circle")
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d[chosenYAxis]))
     .classed("stateCircle", true)
     .attr("r", 15)
-    // .attr("opacity", ".75");
 
   var circlesText = circlesGroup.append("text")
-    // .data(demoData)
-    // .enter()
-    // .append("text")
     .text( d => d.abbr)
     .attr("dx", d => xLinearScale(d[chosenXAxis]))
     .attr("dy", d => yLinearScale(d[chosenYAxis] *.98))
-    // .text(d => (d.abbr))
     .classed("stateText", true)
-    // .attr("font-size", "12px")
-    // .attr("text-anchor", "middle")
-    // .attr("fill", "white");
 
 //Axis labels
 var xlabelsGroup = chartGroup.append("g")
@@ -117,35 +106,29 @@ var ylabelsGroup = chartGroup.append("g")
 var healthcareLabel = ylabelsGroup.append("text")
 .attr("transform", "rotate(-90)")
 .attr("x", (height / 2))
-.attr("y", - (width/2) -50)
+.attr("y", - (width/2) -30)
 .attr("value", "healthcare")  
-.attr("dy", "1em")
-.classed("axis-text", true)
 .text("Without Healthcare (%)")
 .classed("active", true);
 
 var smokesLabel = ylabelsGroup.append("text")
 .attr("transform", "rotate(-90)")
 .attr("x", (height / 2))
-.attr("y", - (width/2) -70)
+.attr("y", - (width/2) -50)
 .attr("value", "smokes")
-.classed("axis-text", true)
-.attr("dy", "1em")
 .text("Smoker (%)")
 .classed("inactive", true);
 
 var obesityLabel = ylabelsGroup.append("text")
 .attr("transform", "rotate(-90)")
 .attr("x", (height / 2))
-.attr("y", - (width/2) -90)
+.attr("y", - (width/2) -70)
 .attr("value", "obesity")
-.attr("dy", "1em")
-.classed("axis-text", true)
-.text("Obese (%)")
+.text("Obesity (%)")
 .classed("inactive", true);
 
   // Tool Tips 
-  circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
+  circlesGroup = updateToolTip(circlesGroup, chosenYAxis, chosenXAxis);
 
    //listener events for labels
    xlabelsGroup.selectAll("text")
