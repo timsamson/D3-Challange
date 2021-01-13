@@ -231,4 +231,15 @@ var obesityLabel = ylabelsGroup.append("text")
        }
      }
    );
+   
+
+   var analysis = [];
+
+   d3.select('#article_text')
+     .selectAll('div')
+     .data(analysis)
+     .enter()
+     .append('div')
+     .text(analysis);
+     
 });
