@@ -1,5 +1,5 @@
 # D3-Challange
-<h2>Health Risks amoung Americans</h2>
+<h2>Health Risks Amoung Americans</h2>
 
 Many factors relate tot he health risks that Americans face on a daily basis, these can include income, age and poverty. This visualization looks at behavioral risk factores obtained from the U.S. Census bureau for 1 Year (2014).
 
