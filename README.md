@@ -8,7 +8,7 @@ The current data set includes data on rates of income, obesity, poverty, etc. by
 <br>
 <h3>Example of Multi-Axis visualization</h3>
 
-!["Horz Bar Chart"](https://github.com/timsamson/plotly-challange/blob/main/data/Images/Horz_Bar_Example.png)
+!["Horz Bar Chart"](https://github.com/timsamson/D3-Challange/blob/main/D3_data_journalism/data/images/visual_example.png)
 
 <br>
 <h3>File Structure</h3>
