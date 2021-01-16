@@ -16,10 +16,9 @@ var svg = d3.select("#scatter")
 var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-// Initial Params
+// Initial Params and analysis
 var chosenXAxis = "poverty";
 var chosenYAxis = "healthcare";
-
 
   // Retrieve data from the CSV file and execute everything below
   d3.csv("D3_data_journalism/data/data.csv").then(function(demoData, err) {
@@ -71,7 +70,7 @@ var chosenYAxis = "healthcare";
   var circlesText = circlesGroup.append("text")
     .text( d => d.abbr)
     .attr("dx", d => xLinearScale(d[chosenXAxis]))
-    .attr("dy", d => yLinearScale(d[chosenYAxis] *.98))
+    .attr("dy", d => yLinearScale(d[chosenYAxis]-0.4))
     .classed("stateText", true)
 
 //Axis labels
@@ -179,6 +178,7 @@ var obesityLabel = ylabelsGroup.append("text")
            .classed("inactive", false);
        }
      }
+     writeAnalysis(chosenXAxis, chosenYAxis);
    });
  
        //Y Axis
@@ -213,7 +213,7 @@ var obesityLabel = ylabelsGroup.append("text")
          obesityLabel
            .classed("active", true)
            .classed("inactive", false);
-         incomeLabel
+         smokesLabel
            .classed("active", false)
            .classed("inactive", true);
        }
@@ -229,68 +229,7 @@ var obesityLabel = ylabelsGroup.append("text")
            .classed("inactive", false);
        }
        }
-     }
+       writeAnalysis(chosenXAxis, chosenYAxis);
+      }
    );
-   console.log(chosenXAxis);
-   console.log(chosenYAxis);
-
-// function updateArticle (chosenXAxis, chosenYAxis){
-
-  if (chosenXAxis === "poverty") {
-    if (chosenYAxis === "healthcare") {
-      articleHeader = "Does Poverty affect access to healthcare?"
-      articleText = "1"
-    }
-    else if(chosenYAxis === "smoker") {
-      articleHeader = "Are poorer people more likely to smoke?"
-      articleText = "2"
-    }
-    else {
-      articleHeader = "Obesity rates compared to Peverty"
-      articleText = "3"
-    }
-  }
-  else if (chosenXAxis === "age"){
-    if (chosenYAxis=== "healthcare") {
-      articleHeader = "Age and Healthcare"
-      articleText = "4"
-    }
-    else if(chosenYAxis === "smoker") {
-      articleHeader = "Age and Smoking"
-      articleText = "5"
-    }
-    else {
-      articleHeader = "Age and Obesity"
-      articleText = "6"
-    }
-  }
-  else {
-    if (chosenYAxis === "healthcare") {
-      articleHeader = "Does income affect helthcare?"
-      articleText = "7"
-    }
-    else if(chosenYAxis === "smoker") {
-      articleHeader = "How does income relate to smoking?"
-      articleText = "8"
-    }
-    else {
-      articleHeader = "Rich, Fat, Bastards is it really a thing?";
-      articleText = "9";
-    }
-  }
-  
-   d3.select("#article_text")
-      .classed("article_text", true)
-      .text(articleText);
-
-   d3.select("#article_header")
-      .classed("article_header", true)
-      .html(`<h3> ${articleHeader} </h3>`);
-
-   console.log(articleText);
-   console.log(articleHeader);
-// }
-
-// updateArticle.call
-
 });
