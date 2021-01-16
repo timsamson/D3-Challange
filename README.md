@@ -8,7 +8,7 @@ The data set includes data on rates of income, obesity, poverty and other factor
 <br>
 <h3>Example of Multi-Axis visualization</h3>
 
-!["Example Visualization"](https://github.com/timsamson/D3-Challange/blob/main/D3_data_journalism/data/images/visual_example.png)
+!["Example Visualization"](https://github.com/timsamson/D3-Challange/blob/main/D3_data_journalism/data/images/visualization_example.png)
 
 <br>
 <h3>File Structure</h3>
