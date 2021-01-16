@@ -3,7 +3,7 @@
 
 Many factors relate tot he health risks that Americans face on a daily basis, these can include income, age and poverty. This visualization looks at behavioral risk factores obtained from the U.S. Census bureau for 1 Year (2014).
 
-The current data set includes data on rates of income, obesity, poverty, etc. by state. Each of these factors effect teh quality of life for americans living in those states. 
+The data set includes data on rates of income, obesity, poverty and other factors that influence risk, by state. Each of these factors effect the quality of life for americans living in those states. 
 
 <br>
 <h3>Example of Multi-Axis visualization</h3>
